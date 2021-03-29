@@ -52,7 +52,7 @@
 
 // ------- Identity for splash screen and console --------
 #define EXAMPLE_TITLE    "Say Phonetics"
-#define EXAMPLE_VERSION  "v0.1"
+#define EXAMPLE_VERSION  "v0.1.0"
 #define PROGRAM_LINE1    "Barry K7BWH"
 #define PROGRAM_LINE2    ""
 #define PROGRAM_COMPILED __DATE__ " " __TIME__

@@ -1,0 +1,19 @@
+#######################################
+# Syntax Coloring Map For Audio_QSPI
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+AudioQSPI	KEYWORD1
+WaveInfo	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+begin	KEYWORD2
+play	KEYWORD2
+getInfo	KEYWORD2
+

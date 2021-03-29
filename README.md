@@ -62,7 +62,7 @@ If you need to format flash memory again:
 ## Accessing SPI Flash
 Arduino doesn't have the ability to show up as a 'mass storage' disk drive. So instead we must use CircuitPython to do that part for us. Here's the full technique:
 
-1. Get the latest **circuitpython uf2 file** for your board (Feather M4 Express) from https://circuitpython.org/downloads<br/>At time of writing, this is version 6.1.0 named "adafruit-circuitpython-feather_m4_express-en_US-6.1.0.uf2"<br/> <img src="img/circuit_python_feather_m4.png" width="25%" height="25%" alt="screen shot CircuitPython download" />
+1. Get the latest **circuitpython uf2 file** for your board (Feather M4 Express) from https://circuitpython.org/downloads<br/>At time of writing, the latest version is 6.1.0 and the UF2 file is named "adafruit-circuitpython-feather\_m4\_express-en_US-6.1.0.uf2"<br/><img src="img/circuit_python_feather_m4.png" width="50%" height="50%" alt="screen shot CircuitPython download" />
 
 1. Start the bootloader on the Express board. 
 

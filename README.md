@@ -52,7 +52,7 @@ Here's how:
 
 1. At time of writing, the latest version is 6.1.0 and the UF2 file is named "adafruit-circuitpython-feather\_m4\_express-en_US-6.1.0.uf2"<br/><img src="img/circuit_python_feather_m4.png" width="67%" height="67%" alt="screen shot CircuitPython download" />
 
-1. Start the bootloader on the Feather board by double-clicking its Reset button. After a moment, you should see a "FEATHERBOOT" drive appear.<br/><img src="img/windows_featherboot.png" width="50%" height="50%" alt="screen shot FEATHERBOOT drive" />
+1. Start the bootloader on the Feather board by double-clicking its Reset button. After a moment, you should see a "FEATHERBOOT" drive appear.<br/><img src="img/windows_featherboot.png" width="67%" height="67%" alt="screen shot FEATHERBOOT drive" />
 
 1. Drag the circuitpython UF2 file from Windows to FEATHERBOOT. (There is no need to rename the downloaded file.)<br/>First, the file will download and the Feather reboots.<br/>Then you should see a CIRCUITPY drive appear as an external "hard drive" with a few files already on it.
 

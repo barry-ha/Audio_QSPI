@@ -23,7 +23,7 @@ One of the best features of Adafruit's "Express" boards is a small SPI flash mem
 
 We will rely on compatibility with CircuitPy to help us copy files from Windows into flash memory so they can be used by Arduino IDE programs.
 
-1. To use the flash memory with Arduino you'll need to install the [Adafruit SPI Flash Memory library](https://github.com/adafruit/Adafruit_SPIFlash) in the Arduino IDE.
+1. To write Arduino IDE programs that will use flash memory you'll need to install the [Adafruit SPI Flash Memory library](https://github.com/adafruit/Adafruit_SPIFlash) in the Arduino IDE.
 
 1. Open up the Arduino library manager.<br/>![screen shot Arduino menu](img/arduino_compatibles_library_manager_menu.png)
 
@@ -35,11 +35,30 @@ There are more tutorials on Arduino library installation at:
 http://learn.adafruit.com/adafruit-all-about-arduino-libraries-install-use
  
 ## Format Flash Memory
-To format Flash memory, all it needs is to **install CircuitPython once**. The first time it runs on your Feather M4, it will erase the memory and format the Flash chip in exactly the way we need. Note it may take a minute or two to format the first time.
+To allow Windows to download files, you need to format Flash in a way that is compatible with CircuitPython.
 
-The subsequent times that CircuitPython is loaded, it will not erase any files. Any files written by Arduino IDE programs are available to CircuitPy programs, and vice versa. 
+To format Flash memory, you need to **install CircuitPython once**. The first time it runs on your Feather M4, it will erase the memory and format the Flash chip in exactly the way we need. Note it may take a minute or two to format the first time.
 
-Footnote: The **fatfs\_circuitpython** sketch is useful if you'd like to wipe everything away and start fresh, or get back to a good state if the memory should get corrupted for some reason.
+The subsequent times that CircuitPython is loaded, it will not erase any files. Any files written by Arduino IDE programs are available to CircuitPy programs, and vice versa.
+
+## How to Install CircuitPython
+CircuitPython is a programming language designed to simplify experimenting and learning to code on low-cost microcontroller boards. With CircuitPython, there is no IDE or special desktop software needed. Once your Feather is set up, it will appear as a USB drive named CIRCUITPY in your file system. You can open a text editor and start editing code. 
+
+The first time we use the CircuitPython mode it will format the Flash memory. Subsequently we use CircuitPython mode to transfer files. 
+
+Here's how: 
+
+1. Get the latest **circuitpython UF2 file** for your board (Feather M4 Express) from https://circuitpython.org/downloads
+
+1. At time of writing, the latest version is 6.1.0 and the UF2 file is named "adafruit-circuitpython-feather\_m4\_express-en_US-6.1.0.uf2"<br/><img src="img/circuit_python_feather_m4.png" width="67%" height="67%" alt="screen shot CircuitPython download" />
+
+1. Start the bootloader on the Feather board by double-clicking its Reset button. After a moment, you should see a "FEATHERBOOT" drive appear.<br/><img src="img/windows_featherboot.png" width="50%" height="50%" alt="screen shot FEATHERBOOT drive" />
+
+1. Drag the circuitpython UF2 file from Windows to FEATHERBOOT. (There is no need to rename the downloaded file.)<br/>First, the file will download and the Feather reboots.<br/>Then you should see a CIRCUITPY drive appear as an external "hard drive" with a few files already on it.
+
+
+## If You Need to Format Again
+The **fatfs\_circuitpython** sketch is useful if you'd like to wipe everything away and start fresh, or get back to a good state if the memory should get corrupted for some reason.
 
 Do not use fatfs\format or fatfs\_erase - the resultant file system is not compatible with Arduino IDE programs. 
 
@@ -59,26 +78,16 @@ If you need to format flash memory again:
 
 1. Once confirmed the sketch will format the flash memory.<br/>The format process takes about a minute so be patient as the data is erased and formatted.  You should see a message printed once the format process is complete.  At this point the flash chip will be ready to use with a brand new empty filesystem.
 
-## Accessing SPI Flash
-Arduino doesn't have the ability to show up as a 'mass storage' disk drive. So instead we must use CircuitPython to do that part for us. Here's the full technique:
+## How to Download Files to SPI Flash
+Arduino doesn't have the ability to show up as a USB drive. So instead we must switch go CircuitPython mode to do that part for us. Here's the process:
 
-1. Get the latest **circuitpython uf2 file** for your board (Feather M4 Express) from https://circuitpython.org/downloads<br/>At time of writing, the latest version is 6.1.0 and the UF2 file is named "adafruit-circuitpython-feather\_m4\_express-en_US-6.1.0.uf2"<br/><img src="img/circuit_python_feather_m4.png" width="50%" height="50%" alt="screen shot CircuitPython download" />
+1. Run the bootloader by double-clicking the Reset button on the Feather.<br/>You should see a USB drive appear in Windows.
 
-1. Start the bootloader on the Express board. 
+1. If the new USB drive is CIRCUITPY then you can drag, drop, copy and paste files between Windows and Feather.
 
-1. Drag over the latest circuitpython uf2 file<br/>After a moment, you should see a CIRCUITPY drive appear as an external "hard drive" with a few files already on it.
+1. If the new USB drive is FEATHERBOOT then drag'n drop the circuitpython UF2 (previously downloaded) onto this drive.<br/>You should see the Feather reboot and reattach to Windows as a drive named CIRCUITPY.
 
-1. ?Now go to Arduino and upload the fatfs_circuitpython example sketch from the Adafruit SPI library. Open the serial console. It will successfully mount the filesystem and write a new line to data.txt 
-
-arduino_circuitpysketch.png
-
-1. Back on your computer, re-start the Express board bootloader, and re-drag circuitpython.uf2 onto the BOOT drive to reinstall circuitpython
-
-1. Check the CIRCUITPY drive, you should now see data.txt which you can open to read!
-
-arduino_datatext.png
-
-? Once you have your Arduino sketch working well, for datalogging, you can simplify this procedure by dragging CURRENT.UF2 off of the BOOT drive to make a backup of the current program before loading circuitpython on. Then once you've accessed the file you want, re-drag CURRENT.UF2 back onto the BOOT drive to re-install the Arduino sketch!
+Note that it's possible simplify re-loading your Arduino IDE program by dragging CURRENT.UF2 off of the FEATHERBOOT drive to make a backup of the current program _before_ loading CircuitPython. Then once you've managed the files how you want, re-drag the saved CURRENT.UF2 back onto the BOOT drive to re-install the Arduino sketch.
 
 ## How to Prepare Audio Files
 Prepare a WAV file to 16 kHz mono:
@@ -101,14 +110,12 @@ Prepare a WAV file to 16 kHz mono:
 1. Format QSPI file system to CircuitPy format (one time).<br/>Formatting is only done once; it erases everything on the memory chip, formats it, and then the file system will remain compatible with both CircuitPy and Arduino IDE frameworks thereafter.
 
 1. To save files from Windows onto the QSPI memory chip on Feather M4 Express:
-   1. Temporarily load CircuitPy onto the Feather
+   1. Temporarily load CircuitPy onto the Feather (see above)
    1. Drag-and-drop files from within Windows to Feather
-   1. Then load your Arduino sketch again.
+   1. Then load your Arduino IDE program again
    
 ## How to Examine Flash File System on Feather M4
-After transferring files to the Quad-SPI memory chip, you'll want to confirm what has been stored in the SD file system. Here's how...
-
-_todo - link to the Griduino example "Flash\_file\_directory\_list"_
+After transferring files to the Quad-SPI memory chip, you'll want to confirm what has been stored in the SD file system. Of course you can switch to CircuitPython mode to see the files in Windows. But there's also a basic example program in the Griduino project: [Griduino / examples / Flash\_file\_directory\_list](https://github.com/barry-ha/Griduino/tree/master/examples/Flash_file_directory_list)
 
 ## How to Read WAV File Header
 Some Arduino programs may want to read attributes from the WAV file. For example, it may want to show the file size, bit rate, mono/stereo, and other characteristics. This is useful for at least debugging purposes. 

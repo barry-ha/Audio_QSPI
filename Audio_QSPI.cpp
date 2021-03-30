@@ -99,7 +99,7 @@ public:
       this->chunk2size = min(filesize - 44, MAXBUFFERSIZE);
     }
 
-    if (true /*!rc*/) {
+    if (!rc) {
       dump();
     }
     return rc;

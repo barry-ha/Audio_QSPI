@@ -198,6 +198,7 @@ void showMessage(int x, int y, const char *msg, int value) {
   tft.print(value);
   tft.print("   ");
 
+  Serial.print(". ");
   Serial.print(msg);
   Serial.println(value);
 }
@@ -217,7 +218,8 @@ void showWaveInfo(WaveInfo meta) {
   tft.setTextColor(cVALUE, cBACKGROUND);
   tft.print(playbackTime, 3);
   tft.print("  ");
-  Serial.print("Playback time ");
+
+  Serial.print(". Playback time ");
   Serial.println(playbackTime, 3);
 }
 
@@ -231,7 +233,7 @@ void sayGrid(const char *name) {
     // example: choose the filename to play
     char myfile[32];
     char letter = name[ii];
-    snprintf(myfile, sizeof(myfile), "/male/%c_bwh_16.wav", letter);
+    snprintf(myfile, sizeof(myfile), "/audio/%c_bwh_16.wav", letter);
 
     // example: read WAV attributes and display it on screen while playing it
     WaveInfo info;

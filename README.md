@@ -54,7 +54,7 @@ Here's how:
 
 1. Start the bootloader on the Feather board by double-clicking its Reset button. After a moment, you should see a "FEATHERBOOT" drive appear.<br/><img src="img/windows_featherboot.png" width="67%" height="67%" alt="screen shot FEATHERBOOT drive" />
 
-1. Drag the circuitpython UF2 file from Windows to FEATHERBOOT. (There is no need to rename the downloaded file.)<br/>First, the file will download and the Feather reboots.<br/>Then you should see a CIRCUITPY drive appear as an external "hard drive" with a few files already on it.
+1. Drag the circuitpython UF2 file from Windows to FEATHERBOOT. (There is no need to rename the downloaded file.)<br/>First, the file will download and the Feather reboots.<br/>Then you should see a CIRCUITPY drive appear as an external USB drive with a few files already on it.
 
 
 ## If You Need to Format Again
@@ -79,31 +79,33 @@ If you need to format flash memory again:
 1. Once confirmed the sketch will format the flash memory.<br/>The format process takes about a minute so be patient as the data is erased and formatted.  You should see a message printed once the format process is complete.  At this point the flash chip will be ready to use with a brand new empty filesystem.
 
 ## How to Download Files to SPI Flash
-Arduino doesn't have the ability to show up as a USB drive. So instead we must switch go CircuitPython mode to do that part for us. Here's the process:
+Arduino doesn't have the ability to show up as a USB drive. So instead we switch to CircuitPython mode to do that part for us. Here's the process:
 
 1. Run the bootloader by double-clicking the Reset button on the Feather.<br/>You should see a USB drive appear in Windows.
 
-1. If the new USB drive is CIRCUITPY then you can drag, drop, copy and paste files between Windows and Feather.
+1. If the new USB drive is CIRCUITPY then you can drag, drop, copy, paste and edit files on the Feather from your Windows system.
 
-1. If the new USB drive is FEATHERBOOT then drag'n drop the circuitpython UF2 (previously downloaded) onto this drive.<br/>You should see the Feather reboot and reattach to Windows as a drive named CIRCUITPY.
+1. If the new USB drive is FEATHERBOOT then drag'n drop the CircuitPython UF2 file (previously downloaded) onto this drive.<br/>You should see the Feather reboot and reattach to Windows as a drive named CIRCUITPY.
 
-Note that it's possible simplify re-loading your Arduino IDE program by dragging CURRENT.UF2 off of the FEATHERBOOT drive to make a backup of the current program _before_ loading CircuitPython. Then once you've managed the files how you want, re-drag the saved CURRENT.UF2 back onto the BOOT drive to re-install the Arduino sketch.
+Note that it's possible simplify re-loading your Arduino IDE program by dragging CURRENT.UF2 off of the FEATHERBOOT drive to make a backup of the current program _before_ loading CircuitPython. Then, after you've managed the files how you want, re-drag the saved CURRENT.UF2 back onto the BOOT drive to re-install the Arduino sketch.
 
 ## How to Prepare Audio Files
 Prepare a WAV file to 16 kHz mono:
 
 1. Install free open-source [Audacity software](https://www.audacityteam.org/download/) <img align="right" src="img/audacity_logo.png" width="10%" height="10%" alt="logo" title="Audacity Logo"/>
+
 1. Open Audacity.exe
-1. Open a recording or a project, e.g. \Documents\Arduino\libraries\Audio\_QSPI\audio\original\phonetic_alphabet.aup
+1. Open a recording or a project, e.g. \Documents\Arduino\libraries\Audio\_QSPI\audio\original\phonetic\_alphabet.aup
 1. Select "Project rate" of 16000 Hz
 1. Select an audio fragment, such as spoken word "Charlie"
+2. For example:<br/><img src="img/audacity_charlie_16khz.png" width="67%" height="67%" alt="screen shot to select 16 KHz" />
 1. Menu bar > Effect > Normalize:
    1. Remove DC offset
    1. Normalize peaks -1.0 dB
 1. Menu bar > File > Export > Export as WAV
    1. Save as type: WAV (Microsoft)
    1. Encoding: Signed 16-bit PCM
-   1. Filename = e.g. "c-bwh-16.wav"
+   1. Filename = e.g. "c\_bwh\_16.wav"
 1. The output file contains 2-byte integer numbers in the range -32767 to +32767
 
 ## How to Transfer Audio Files
@@ -115,12 +117,12 @@ Prepare a WAV file to 16 kHz mono:
    1. Then load your Arduino IDE program again
    
 ## How to Examine Flash File System on Feather M4
-After transferring files to the Quad-SPI memory chip, you'll want to confirm what has been stored in the SD file system. Of course you can switch to CircuitPython mode to see the files in Windows. But there's also a basic example program in the Griduino project: [Griduino / examples / Flash\_file\_directory\_list](https://github.com/barry-ha/Griduino/tree/master/examples/Flash_file_directory_list)
+After transferring files to the Feather's Quad-SPI memory chip, you may want to confirm what has been stored in the SD file system. Of course you can switch to CircuitPython mode to see the files in Windows. But there's also a basic example program in the Griduino project: [Griduino / examples / Flash\_file\_directory\_list](https://github.com/barry-ha/Griduino/tree/master/examples/Flash_file_directory_list)
 
 ## How to Read WAV File Header
-Some Arduino programs may want to read attributes from the WAV file. For example, it may want to show the file size, bit rate, mono/stereo, and other characteristics. This is useful for at least debugging purposes. 
+Some Arduino programs may want to read attributes from the WAV file. For example, it may want to show the file size, bit rate, mono/stereo, and other characteristics. This is useful at least for debugging purposes.
 
-Call the **getInfo()** method to fetch metadata from a WAV file. Here's how...
+Call the **getInfo()** method to fetch metadata from a WAV file:
 
     Audio_QSPI flash;
     flash.begin();
@@ -138,7 +140,7 @@ See notes in the section below.
 ## How to Play WAV Files
 This might be what you really came here for: reading a WAV file from Flash memory and playing it on the Feather M4.
 
-Call the **play()** method to send PCM sampled audio to the Feather's DAC pin. Here's how...
+Call the **play()** method to send PCM sampled audio to the Feather's DAC0 pin:
 
     Audio_QSPI flash;
     flash.begin();

@@ -29,9 +29,8 @@
             https://github.com/PaulStoffregen/Audio
 */
 
-#include <SdFat.h>               // for FAT file systems on Flash and Micro SD cards
-#include <Adafruit_SPIFlash.h>   // for FAT file systems on SPI flash chips
-#include <elapsedMillis.h>       // for short-interval timing functions
+#include <SdFat.h>           // for FAT file systems on Flash and Micro SD cards
+#include <elapsedMillis.h>   // for short-interval timing functions
 #include "audio_qspi.h"
 
 // canonical WAV header
@@ -134,19 +133,9 @@ public:
   }
 };
 
-// ---------- Flash chip
-// SD card shares the hardware SPI interface with TFT display, and has
-// separate 'select' pins to identify the active device on the bus.
-const int chipSelectPin = 7;
-const int chipDetectPin = 8;
-
 // ------------ Audio output
 #define DAC_PIN     DAC0   // onboard DAC0 == pin A0
 #define PIN_SPEAKER DAC0   // uses DAC
-
-Adafruit_FlashTransport_QSPI gFlashTransport;   // Quad-SPI 2MB memory chip
-Adafruit_SPIFlash gFlash(&gFlashTransport);     //
-FatFileSystem gFatfs;                           // file system object from SdFat
 
 // ========== file system helpers ==============================
 #define MAXBUFFERSIZE 32000   // max = 32K @ 16 khz = max 2.0 seconds
@@ -199,19 +188,19 @@ bool AudioQSPI::begin(void) {
 }
 
 // ----- helpers to output PCM sampled audio to DAC
-int AudioQSPI::audioFloatToInt(float item) {   // scale floating point sample to DAC integer
-  // input:  (-1 ... +1)
+unsigned int AudioQSPI::scaleFloatToDAC(float sample) {
+  // input:  (-1.0 ... +1.0)
   // output: (0 ... 2^12)
-  return int((item + 1.0) * 2040.0);
+  return int((sample + 1.0) * 2040.0);
 }
 void AudioQSPI::playAudioFloat(const float *audio, unsigned int numSamples, int holdTime) {
   for (int ii = 0; ii < numSamples; ii++) {
-    int value = audioFloatToInt(audio[ii]);
+    int value = scaleFloatToDAC(audio[ii]);
     analogWrite(DAC0, value);
     delayMicroseconds(holdTime);   // hold the sample value for the sample time
   }
   // reduce speaker click by setting resting output sample to midpoint
-  int midpoint = audioFloatToInt((audio[0] + audio[numSamples - 1]) / 2.0);
+  int midpoint = scaleFloatToDAC((audio[0] + audio[numSamples - 1]) / 2.0);
   analogWrite(DAC0, midpoint);
 }
 unsigned int AudioQSPI::scale16BitToDAC(int sample) {
@@ -226,9 +215,14 @@ void AudioQSPI::playAudio16Bit(const int16_t audio[MAXBUFFERSIZE], const int num
     delayMicroseconds(holdTime);   // hold the sample value for the sample time
   }
 }
+unsigned int AudioQSPI::scale8BitToDAC(int sample) {
+  // input:  (0 ... 2^8)
+  // output: (0 ... 2^12)
+  return sample << 4;
+}
 void AudioQSPI::playAudio8bit(const unsigned char *audio, int numSamples, int holdTime) {
   for (int ii = 0; ii < numSamples; ii++) {
-    int value = audio[ii] << 4;   // max sample is 2^8, max DAC output 2^12, so shift left by 4
+    int value = scale8BitToDAC(audio[ii]);
     analogWrite(DAC0, value);
     delayMicroseconds(holdTime);   // hold the sample value for the sample time
   }

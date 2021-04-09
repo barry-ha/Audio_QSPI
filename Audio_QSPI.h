@@ -49,12 +49,13 @@
             https://github.com/PaulStoffregen/Audio
 */
 #pragma once
-#include <SdFat.h>   // for FAT file systems on Flash and Micro SD cards
+#include <SdFat.h>               // for FAT file systems on Flash and Micro SD cards
+#include <Adafruit_SPIFlash.h>   // for FAT file systems on SPI flash chips
 
 struct WaveInfo {
   // Everything a caller wants to know about a single "Microsoft WAV" sampled audio file.
-  // This is an easy way to know what's playing without opening files and parsing
-  // the canonical WAV header yourself. It brings file- and error- handling into one spot.
+  // This is an easy way to know what's playing without opening files and parsing the
+  // canonical WAV header yourself. It brings file handling and error handling into one spot.
   char filename[32];    // filename,                           e.g. "/male/c_bwh_16.wav"
   int filesize;         // total number of bytes in this WAV file
   int samplesPerSec;    // bitrate;                            e.g. '16000'
@@ -65,22 +66,34 @@ struct WaveInfo {
 
 class AudioQSPI {
 public:
-  AudioQSPI(void) {}
+  AudioQSPI(void) : gFlash(&gFlashTransport) {}
   bool begin(void);
   bool play(const char *filename);   // blocking: does not return until playback is finished
   bool getInfo(WaveInfo *pInfo, const char *audioFileName);
 #define MAXBUFFERSIZE 32000   // max = 32K @ 16 khz = max 2.0 seconds
 
 protected:
+  // ---------- Flash chip
+  // SD card shares the hardware SPI interface with TFT display, and has
+  // separate 'select' pins to identify the active device on the SPI bus.
+  const int chipSelectPin = 7;
+  const int chipDetectPin = 8;
+
   // ----- file handling helpers
+  Adafruit_FlashTransport_QSPI gFlashTransport;   // Quad-SPI 2MB memory chip
+  Adafruit_SPIFlash gFlash;                       //
+  FatFileSystem gFatfs;                           // file system object from SdFat
+
   int openFlash(void);
   bool getWaveData(WaveInfo *pInfo, int16_t pBuffer[MAXBUFFERSIZE], const char audioFileName[32]);
   File open(const char *audioFileName);
 
   // ----- audio helpers to output PCM sampled audio to DAC
-  int audioFloatToInt(float item);
-  void playAudioFloat(const float *audio, unsigned int audiosize, int holdTime);
+  unsigned int scaleFloatToDAC(float sample);
+  unsigned int scale8BitToDAC(int sample);
   unsigned int scale16BitToDAC(int sample);
+
+  void playAudioFloat(const float *audio, unsigned int audiosize, int holdTime);
   void playAudio16Bit(const int16_t audio[MAXBUFFERSIZE], const int audiosize, const int holdTime);
   void playAudio8bit(const unsigned char *audio, int audiosize, int holdTime);
 };

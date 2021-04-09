@@ -2,7 +2,9 @@
 /*
   Play spoken words from 2MB QuadSPI memory chip FatFs using DAC audio output
 
-  Date:     2021-03-29 created to announce random grid names
+  Date:
+            2021-04-08 moved some definitions from global to class member to avoid polluting name space
+            2021-03-29 created to announce random grid names
 
   Software: Barry Hansen, K7BWH, barry@k7bwh.com, Seattle, WA
   Hardware: John Vanderbeck, KM7O, Seattle, WA
@@ -11,10 +13,10 @@
             using the NATO Military Phonetic Alphabet.
             Example data (750 KB) includes Barry's recorded voice sampled at 16 khz mono.
             Sample audio is stored in the 2MB Flash chip and played using DAC0 output pin.
-            
             This library is used in Griduino at https://github.com/barry-ha/Griduino
 
   Preparing audio files:
+            Full details in README at https://github.com/barry-ha/Audio_QSPI
             Prepare your WAV file to 16 kHz mono:
             1. Open Audacity
             2. Open a project, e.g. \Documents\Arduino\Griduino\work_in_progress\Spoken Word Originals\Barry
@@ -52,15 +54,15 @@
 
 // ------- Identity for splash screen and console --------
 #define EXAMPLE_TITLE    "Say Phonetics"
-#define EXAMPLE_VERSION  "v0.1.0"
+#define EXAMPLE_VERSION  "v0.2.0"
 #define PROGRAM_LINE1    "Barry K7BWH"
 #define PROGRAM_LINE2    ""
 #define PROGRAM_COMPILED __DATE__ " " __TIME__
 
 // ---------- configuration options
-const int SHORT_PAUSE   = 300;                // msec between spoken sentences
-const int LONG_PAUSE    = SHORT_PAUSE * 10;   // msec between test cases
-const int howLongToWait = 8;                  // max number of seconds at startup waiting for Serial port to console
+const int SHORT_PAUSE   = 300;               // msec between spoken sentences
+const int LONG_PAUSE    = SHORT_PAUSE * 8;   // msec between test cases
+const int howLongToWait = 8;                 // max number of seconds at startup waiting for Serial port to console
 
 // ---------- Hardware Wiring ----------
 // Same as Griduino platform

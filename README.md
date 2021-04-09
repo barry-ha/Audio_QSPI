@@ -92,10 +92,10 @@ Note that it's possible simplify re-loading your Arduino IDE program by dragging
 ## How to Prepare Audio Files
 Prepare a WAV file to 16 kHz mono:
 
-1. Install free open-source [Audacity software](https://www.audacityteam.org/download/) <img align="right" src="img/audacity_logo.png" width="10%" height="10%" alt="logo" title="Audacity Logo"/>
+1. Install free open-source [Audacity 3 software](https://www.audacityteam.org/download/) <img align="right" src="img/audacity_logo.png" width="10%" height="10%" alt="logo" title="Audacity Logo"/>
 
 1. Open Audacity.exe
-1. Open a recording or a project, e.g. \Documents\Arduino\libraries\Audio\_QSPI\audio\original\phonetic\_alphabet.aup
+1. Open a recording or a project, e.g. \Documents\Arduino\libraries\Audio\_QSPI\audio\ **_Phonetic Alphabet.aup3** 
 1. Select "Project rate" of 16000 Hz
 1. Select an audio fragment, such as spoken word "Charlie"
 2. For example:<br/><img src="img/audacity_charlie_16khz.png" width="67%" height="67%" alt="screen shot to select 16 KHz" />
@@ -107,6 +107,9 @@ Prepare a WAV file to 16 kHz mono:
    1. Encoding: Signed 16-bit PCM
    1. Filename = e.g. "c\_bwh\_16.wav"
 1. The output file contains 2-byte integer numbers in the range -32767 to +32767
+
+## How to Get Example Audio
+The example recording (above) is available in the **audio** folder of https://github.com/barry-ha/Audio_QSPI. You can download both individual WAV files and the original recording which is saved in the AUP3 project file.
 
 ## How to Transfer Audio Files
 1. Format QSPI file system to CircuitPy format (one time).<br/>Formatting is only done once; it erases everything on the memory chip, formats it, and then the file system will remain compatible with both CircuitPy and Arduino IDE frameworks thereafter.

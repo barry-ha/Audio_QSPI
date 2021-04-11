@@ -19,7 +19,7 @@
             Full details in README at https://github.com/barry-ha/Audio_QSPI
             Prepare your WAV file to 16 kHz mono:
             1. Open Audacity
-            2. Open a project, e.g. \Documents\Arduino\Griduino\work_in_progress\Spoken Word Originals\Barry
+            2. Open a project, e.g. \Documents\Arduino\libraries\Audio_QSPI\audio\_Phonetic Alphabet.aup3
             3. Select "Project rate" of 16000 Hz
             4. Select an audio fragment, such as spoken word "Charlie"
             5. Menu bar > Effect > Normalize 
@@ -28,24 +28,24 @@
             5. Menu bar > File > Export > Export as WAV
                a. Save as type: WAV (Microsoft)
                b. Encoding: Signed 16-bit PCM
-               c. Filename = e.g. "c_bwh_16.wav"
-            6. The output file contains 2-byte integer numbers in the range -32767 to +32767
+               c. Filename = e.g. "c.wav"
+            6. Result WAV file contains 2-byte integer numbers in the range -32767 to +32767
 
   Transferring audio files:
-            Format QSPI file system to CircuitPy format (one time).
-            Formatting is only done once; it is compatible with both frameworks.
+            Format QSPI file system to CircuitPy format (one time)
+            Formatting is only done once; file system is then compatible with CIRCUITPY and FEATHERBOOT frameworks
 
             To save files from Windows onto the QSPI memory chip on Feather M4 Express,
             1. Temporarily load CircuitPy onto the Feather
             2. Drag-and-drop files from within Windows to Feather
-            3. Then load your Arduino sketch again.
+            3. Then load your Arduino sketch again
 
   Mono Audio: 
-            The DAC on the SAMD51 is a 12-bit output, from 0 - 3.3v.
+            The DAC on the SAMD51 is a 12-bit output, from 0 - 3.3v
             The largest 12-bit number is 4,096:
-            * Writing 0 will set the DAC to minimum (0.0 v) output.
-            * Writing 4096 sets the DAC to maximum (3.3 v) output.
-            This example program has no user inputs.
+            * Writing 0 will set the DAC to minimum (0.0 v) output
+            * Writing 4096 sets the DAC to maximum (3.3 v) output
+            This example program has no user inputs
 */
 
 #include <Adafruit_ILI9341.h>   // TFT color display library
@@ -54,7 +54,7 @@
 
 // ------- Identity for splash screen and console --------
 #define EXAMPLE_TITLE    "Say Phonetics"
-#define EXAMPLE_VERSION  "v0.2.0"
+#define EXAMPLE_VERSION  "v1.0.0"
 #define PROGRAM_LINE1    "Barry K7BWH"
 #define PROGRAM_LINE2    ""
 #define PROGRAM_COMPILED __DATE__ " " __TIME__
@@ -96,12 +96,13 @@ int gVolume   = 14;   // initial digital potentiometer wiper position, 0..99
 #define cWARN       0xF844           // brighter than ILI9341_RED but not pink
 
 // ========== splash screen ====================================
-const int indent = 8;            // indent labels, slight margin on left edge of screen
-const int yRow1  = 8;            // title
-const int yRow2  = yRow1 + 20;   // compiled date
-const int yRow3  = yRow2 + 40;   // loop count
-const int yRow4  = yRow3 + 20;   // volume
-const int yRow5  = yRow4 + 24;   // wave info
+const int indent = 8;                    // indent labels, slight margin on left edge of screen
+const int height = 20;                   // text row height
+const int yRow1  = 8;                    // title
+const int yRow2  = yRow1 + height;       // compiled date
+const int yRow3  = yRow2 + height * 2;   // loop count
+const int yRow4  = yRow3 + height;       // volume
+const int yRow5  = yRow4 + height;       // wave info
 
 void startSplashScreen() {
   tft.setTextSize(2);
@@ -174,15 +175,6 @@ void setup() {
 }
 
 // ===== screen helpers
-void showWiperPosition(int row, int wiper) {
-  tft.setCursor(indent, row);
-  tft.setTextColor(cTEXTCOLOR, cBACKGROUND);
-  tft.print("Volume wiper ");
-
-  tft.setTextColor(cVALUE, cBACKGROUND);
-  tft.print(wiper);
-  tft.print(" ");
-}
 void showLoopCount(int row, int loopCount) {
   tft.setCursor(indent, row);
   tft.setTextColor(cTEXTCOLOR, cBACKGROUND);
@@ -206,16 +198,20 @@ void showMessage(int x, int y, const char *msg, int value) {
 }
 void showWaveInfo(WaveInfo meta) {
   int x = indent;
-  int y = yRow5;
-  showMessage(x, y + 0, "Number samples ", meta.numSamples);
-  showMessage(x, y + 20, "Bytes / sample ", meta.bytesPerSample);
-  showMessage(x, y + 40, "Overall file size ", meta.filesize);
-  showMessage(x, y + 60, "Samples / sec ", meta.samplesPerSec);
-  showMessage(x, y + 80, "Hold time ", meta.holdtime);
+  int y = yRow4;
+  int h = height;
+
+  eraseErrorOutline();
+  showMessage(x, y + h * 0, "Volume ", gVolume);
+  showMessage(x, y + h * 1, "Number samples ", meta.numSamples);
+  showMessage(x, y + h * 2, "Bytes / sample ", meta.bytesPerSample);
+  showMessage(x, y + h * 3, "Overall file size ", meta.filesize);
+  showMessage(x, y + h * 4, "Samples / sec ", meta.samplesPerSec);
+  showMessage(x, y + h * 5, "Hold time ", meta.holdtime);
 
   float playbackTime = (1.0 / meta.samplesPerSec * meta.numSamples);
   tft.setTextColor(cTEXTCOLOR, cBACKGROUND);
-  tft.setCursor(indent, y + 100);
+  tft.setCursor(indent, y + h * 6);
   tft.print("Playback time ");
   tft.setTextColor(cVALUE, cBACKGROUND);
   tft.print(playbackTime, 3);
@@ -223,6 +219,34 @@ void showWaveInfo(WaveInfo meta) {
 
   Serial.print(". Playback time ");
   Serial.println(playbackTime, 3);
+}
+
+// ----- error message helpers
+int isErrorShowing = false;
+void drawErrorOutline() {
+  isErrorShowing = true;
+  tft.fillRect(indent / 2, yRow4, tft.width() - indent, height * 3 + 2, cBACKGROUND);
+  tft.drawRect(indent / 2, yRow4, tft.width() - indent, height * 3 + 2, cWARN);
+}
+void eraseErrorOutline() {
+  if (isErrorShowing) {
+    tft.fillRect(indent / 2, yRow4, tft.width() - indent, height * 3 + 2, cBACKGROUND);
+  }
+  isErrorShowing = false;
+}
+void showError(const char *line1, const char *line2, const char *filename) {
+  int x = indent;
+  int y = yRow4;
+
+  drawErrorOutline();
+  tft.setTextColor(cWARN, cBACKGROUND);
+  tft.setCursor(indent, y + 3 + height * 0);
+  tft.print(line1);
+  tft.setCursor(indent, y + 3 + height * 1);
+  tft.print(line2);
+  tft.setCursor(indent, y + 3 + height * 2);
+  tft.print(filename);
+  delay(LONG_PAUSE);
 }
 
 // ------ here's the meat of this potato -------
@@ -235,15 +259,19 @@ void sayGrid(const char *name) {
     // example: choose the filename to play
     char myfile[32];
     char letter = name[ii];
-    snprintf(myfile, sizeof(myfile), "/audio/%c_bwh_16.wav", letter);
+    snprintf(myfile, sizeof(myfile), "/audio/%c.wav", letter);
 
     // example: read WAV attributes and display it on screen while playing it
     WaveInfo info;
-    audio_qspi.getInfo(&info, myfile);
-    showWaveInfo(info);
+    bool rc = audio_qspi.getInfo(&info, myfile);
+    if (rc) {
+      showWaveInfo(info);
+    } else {
+      showError("Unable to read WAV file", "See console log", myfile);
+    }
 
     // example: play audio through DAC
-    bool rc = audio_qspi.play(myfile);
+    rc = audio_qspi.play(myfile);
     if (!rc) {
       Serial.print("sayGrid(");
       Serial.print(letter);
@@ -261,7 +289,6 @@ void loop() {
   Serial.print("Loop ");
   Serial.println(gLoopCount);
   showLoopCount(yRow3, gLoopCount);
-  showWiperPosition(yRow4, gVolume);
 
   // ----- play audio clip at 16 khz/float
   sayGrid("aaaa");
@@ -280,6 +307,10 @@ void loop() {
   delay(SHORT_PAUSE);
   sayGrid("k7bwh");
   delay(SHORT_PAUSE);
+
+  // debug error message display
+  //char myfile[] = "bogus.wav";
+  //showError("Unable to read WAV file", "See console log", myfile);
 
   delay(LONG_PAUSE);   // extra pause between loops
   gLoopCount++;

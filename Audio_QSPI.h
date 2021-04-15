@@ -68,7 +68,8 @@ class AudioQSPI {
 public:
   AudioQSPI(void) : gFlash(&gFlashTransport) {}
   bool begin(void);
-  bool play(const char *filename);   // blocking: does not return until playback is finished
+  bool play(const char *filename);    // blocking: does not return until playback is finished
+  bool play(const String filename);   // blocking: does not return until playback is finished
   bool getInfo(WaveInfo *pInfo, const char *audioFileName);
 #define MAXBUFFERSIZE 32000   // max = 32K @ 16 khz = max 2.0 seconds
 

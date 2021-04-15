@@ -345,3 +345,15 @@ bool AudioQSPI::play(const char *myfile) {
   }
   return ok;
 }
+
+bool AudioQSPI::play(const String filename) {
+  // blocking: does not return until playback is finished
+  // this is a shim to convert "String" class to "char[]"
+  // then calls our one single audio playback function
+  int len     = filename.length();
+  char *pName = new char[len + 1];
+  filename.toCharArray(pName, len);
+  bool rc = play(pName);
+  delete pName;
+  return rc;
+}

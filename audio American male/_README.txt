@@ -1,8 +1,8 @@
-Audio Files for Audio_QSPI
+Griduino Audio Files
 ----------
-This folder contains an American male voice for 26 letters and 10 numbers.
+This folder contains the NATO alphabet in an American male voice for 26 letters and 10 numbers.
 
-Copyright (C) 2021, Barry Hansen, barry@electromagneticsoftware.com and barry@k7bwh.com.
+Copyright (C) 2022, Barry Hansen, barry@electromagneticsoftware.com
 
 Voice Credit
 ----------
@@ -14,7 +14,11 @@ This was recorded on the built-in microphone of a Microsoft Studio desktop compu
 * Sample rate: 16 kHz monophonic
 * Encoding: Signed 16-bit PCM
 
-The raw audio recording is provided and is contained inside the Audacity project file:
+Original Source Files
+----------
+https://github.com/barry-ha/Audio_QSPI
+
+The original audio recording is provided and is contained in the Audacity project file:
 
 * \_Phonetic Alphabet.aup3
 
@@ -28,5 +32,5 @@ This audio is free software: you can redistribute it and/or modify it under the 
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with these files.If not, see <https://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License along with these files. If not, see <https://www.gnu.org/licenses/>.
 

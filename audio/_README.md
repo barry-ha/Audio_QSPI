@@ -1,6 +1,6 @@
 Audio Files for Audio_QSPI
 ----------
-This folder contains the NATO alphabet in an American male voice for 26 letters and 10 numbers.
+This folder contains an American male voice for 26 letters and 10 numbers.
 
 Copyright (C) 2021, Barry Hansen, barry@electromagneticsoftware.com and barry@k7bwh.com.
 
@@ -14,7 +14,7 @@ This was recorded on the built-in microphone of a Microsoft Studio desktop compu
 * Sample rate: 16 kHz monophonic
 * Encoding: Signed 16-bit PCM
 
-The original audio recording is provided and is contained in the Audacity project file:
+The raw audio recording is provided and is contained inside the Audacity project file:
 
 * \_Phonetic Alphabet.aup3
 

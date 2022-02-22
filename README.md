@@ -1,5 +1,5 @@
 # Audio_QSPI
-An Arduino library to open and play Microsoft WAV audio PCM files from Quad-SPI memory on Adafruit's Feather M4 Express.
+A library to open and play Microsoft WAV audio PCM files from Quad-SPI memory on Feather M4 Express.
 
 This is the audio programming guide and library that I wanted (needed!) when I started using WAV files on the Feather M4 Express. It was a long process to pull together all the different parts of:
 
@@ -99,24 +99,13 @@ Prepare a WAV file to 16 kHz mono:
 1. Select "Project rate" of 16000 Hz
 1. Select an audio fragment, such as spoken word "Charlie"
 2. For example:<br/><img src="img/audacity_charlie_16khz.png" width="67%" height="67%" alt="screen shot to select 16 KHz" />
-1. Menu bar > Effect > Normalize
-   1. Remove DC Offset
-1. Menu bar > Effect > Change Tempo
-   1. Shortens the time for slowly spoken words without changing pitch
-   1. Percent change: +10 to +20
-   1. Click "Preview" until you're satisfied
-1. Menu bar > Effect > Compressor
-   1. Default settings are:
-   1. Threshold: -12 dB
-   1. Noise Floor: -40 dB
-   1. Ratio: 2:1
-   1. Attack Time: 0.20 secs
-   1. Release Time: 1.0 secs
-1. Menu bar > File > Export > Export selected audio
+1. Menu bar > Effect > Normalize:
+   1. Remove DC offset
+   1. Normalize peaks -1.0 dB
+1. Menu bar > File > Export > Export as WAV
    1. Save as type: WAV (Microsoft)
    1. Encoding: Signed 16-bit PCM
    1. Filename = e.g. "c\_bwh\_16.wav"
-   1. Metadata tags similar to:<br/><img src="img/audacity_metadata_tags.png" width="67%" height="67%" alt="screen shot for example metadata tag settings" />
 1. The output file contains 2-byte integer numbers in the range -32767 to +32767
 
 ## How to Get Example Audio

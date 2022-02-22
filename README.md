@@ -19,9 +19,9 @@ This library was developed for the Griduino project, a device for a vehicle's da
    - Griduino kits are available, https://www.griduino.com.
 
 ## Using SPI Flash Memory
-One of the best features of Adafruit's "Express" boards is a small SPI flash memory chip built into the board.  This memory can be used for almost any purpose like storing data files, Python code, and more.  Think of it like a little SD card that is always connected to the board, and in fact with Arduino you can access the memory using a library that is very similar to the [Arduino SD card library](https://www.arduino.cc/en/reference/SD).  You can even read and write files that CircuitPython stores on the flash chip. 
+One of the best features of Adafruit's "Express" boards is a 2MB SPI flash memory chip built into the board.  This memory can be used for almost any purpose like storing data files, Python code, and more.  Think of it like a little SD card that is always connected to the board, and in fact with Arduino you can access the memory using a library that is very similar to the [Arduino SD card library](https://www.arduino.cc/en/reference/SD).  You can even read and write files that CircuitPython stores on the flash chip. 
 
-We will rely on compatibility with CircuitPy to help us copy files from Windows into flash memory so they can be used by Arduino IDE programs.
+We will rely on compatibility with CircuitPython to help us copy files from Windows into flash memory so they can be used by Arduino IDE programs.
 
 1. To write Arduino IDE programs that will use flash memory you'll need to install the [Adafruit SPI Flash Memory library](https://github.com/adafruit/Adafruit_SPIFlash) in the Arduino IDE.
 
@@ -39,7 +39,7 @@ To allow Windows to download files, you need to format Flash in a way that is co
 
 To format Flash memory, you need to **install CircuitPython once**. The first time it runs on your Feather M4, it will erase the memory and format the Flash chip in exactly the way we need. Note it may take a minute or two to format the first time.
 
-The subsequent times that CircuitPython is loaded, it will not erase any files. Any files written by Arduino IDE programs are available to CircuitPy programs, and vice versa.
+The subsequent times that CircuitPython is loaded, it will not erase any files. Any files written by Arduino IDE programs are available to CircuitPython programs, and vice versa.
 
 ## How to Install CircuitPython
 CircuitPython is a programming language designed to simplify experimenting and learning to code on low-cost microcontroller boards. With CircuitPython, there is no IDE or special desktop software needed. Once your Feather is set up, it will appear as a USB drive named CIRCUITPY in your file system. You can open a text editor and start editing code. 
@@ -50,11 +50,11 @@ Here's how:
 
 1. Get the latest **circuitpython UF2 file** for your board (Feather M4 Express) from https://circuitpython.org/downloads
 
-1. At time of writing, the latest version is 6.1.0 and the UF2 file is named "adafruit-circuitpython-feather\_m4\_express-en_US-6.1.0.uf2"<br/><img src="img/circuit_python_feather_m4.png" width="67%" height="67%" alt="screen shot CircuitPython download" />
+1. At time of writing, the latest version is 6.1.0 and the UF2 file is named "adafruit-circuitpython-feather\_m4\_express-en_US-6.1.0.uf2".<br/><img src="img/circuit_python_feather_m4.png" width="67%" height="67%" alt="screen shot CircuitPython download" />
 
 1. Start the bootloader on the Feather board by double-clicking its Reset button. After a moment, you should see a "FEATHERBOOT" drive appear.<br/><img src="img/windows_featherboot.png" width="67%" height="67%" alt="screen shot FEATHERBOOT drive" />
 
-1. Drag the circuitpython UF2 file from Windows to FEATHERBOOT. (There is no need to rename the downloaded file.)<br/>First, the file will download and the Feather reboots.<br/>Then you should see a CIRCUITPY drive appear as an external USB drive with a few files already on it.
+1. Drag the circuitpython UF2 file from Windows to FEATHERBOOT. There is no need to rename the downloaded file.<br/>The file will download and the Feather will restart.<br/>Then you should see a CIRCUITPY drive appear as an external USB drive with a few files already on it.
 
 
 ## If You Need to Format Again

@@ -22,7 +22,7 @@
             2. Open a project, e.g. \Documents\Arduino\libraries\Audio_QSPI\audio\_Phonetic Alphabet.aup3
             3. Select "Project rate" of 16000 Hz
             4. Select an audio fragment, such as spoken word "Charlie"
-            5. Menu bar > Effect > Normalize 
+            5. Menu bar > Effect > Normalize
                a. Remove DC offset
                b. Normalize peaks -1.0 dB
             5. Menu bar > File > Export > Export as WAV
@@ -40,7 +40,7 @@
             2. Drag-and-drop files from within Windows to Feather
             3. Then load your Arduino sketch again
 
-  Mono Audio: 
+  Mono Audio:
             The DAC on the SAMD51 is a 12-bit output, from 0 - 3.3v
             The largest 12-bit number is 4,096:
             * Writing 0 will set the DAC to minimum (0.0 v) output
@@ -83,7 +83,7 @@ Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
 
 // Griduino hardware has a digital volume control (Maxim DS1804-050+)
 DS1804 volume = DS1804(PIN_VCS, PIN_VINC, PIN_VUD, DS1804_TEN);
-int gVolume   = 14;   // initial digital potentiometer wiper position, 0..99
+int gVolume   = 20;   // initial digital potentiometer wiper position, 0..99
                       // note that speaker distortion begins at wiper=40 when powered by USB
 
 // ----- Griduino color scheme
@@ -96,15 +96,18 @@ int gVolume   = 14;   // initial digital potentiometer wiper position, 0..99
 #define cWARN       0xF844           // brighter than ILI9341_RED but not pink
 
 // ========== splash screen ====================================
-const int indent = 8;                    // indent labels, slight margin on left edge of screen
-const int height = 20;                   // text row height
-const int yRow1  = 8;                    // title
-const int yRow2  = yRow1 + height;       // compiled date
-const int yRow3  = yRow2 + height * 2;   // loop count
-const int yRow4  = yRow3 + height;       // volume
-const int yRow5  = yRow4 + height;       // wave info
+const int indent = 8;    // indent labels, slight margin on left edge of screen
+const int height = 20;   // text row height
+
+const int yRow1 = 8;                // title
+const int yRow2 = yRow1 + height;   // compiled date
+const int yRow3 = yRow2 + height;   // volume
+const int yLine = yRow3 + height;   // horizontal separator
+const int yRow4 = yLine + 6;        // loop count
+const int yRow5 = yRow4 + height;   // wave info
 
 void startSplashScreen() {
+  // screen rows 1-3 are static text
   tft.setTextSize(2);
 
   tft.setCursor(indent, yRow1);
@@ -113,7 +116,16 @@ void startSplashScreen() {
 
   tft.setCursor(indent, yRow2);
   tft.setTextColor(cVALUE, cBACKGROUND);
-  tft.println(PROGRAM_COMPILED);
+  tft.print(PROGRAM_COMPILED);
+
+  tft.setCursor(indent, yRow3);
+  tft.setTextColor(cTEXTCOLOR, cBACKGROUND);
+  tft.print("Volume ");
+  tft.setTextColor(cVALUE, cBACKGROUND);
+  tft.print(gVolume);
+
+  //               x0,y0           x1,y1        color
+  tft.drawLine(indent, yLine, 320 - 8, yLine, cTEXTCOLOR);
 }
 
 void clearScreen() {
@@ -175,6 +187,7 @@ void setup() {
 }
 
 // ===== screen helpers
+/*
 void showLoopCount(int row, int loopCount) {
   tft.setCursor(indent, row);
   tft.setTextColor(cTEXTCOLOR, cBACKGROUND);
@@ -184,6 +197,17 @@ void showLoopCount(int row, int loopCount) {
   tft.print(loopCount);
   tft.print(" ");
 }
+*/
+// display a TEXT-only message
+void showMessage(int x, int y, const char *msg) {
+  tft.setTextColor(cVALUE, cBACKGROUND);
+  tft.setCursor(x, y);
+  tft.print(msg);
+
+  Serial.print(". ");
+  Serial.print(msg);
+}
+// display a message with a VALUE
 void showMessage(int x, int y, const char *msg, int value) {
   tft.setTextColor(cTEXTCOLOR, cBACKGROUND);
   tft.setCursor(x, y);
@@ -196,22 +220,21 @@ void showMessage(int x, int y, const char *msg, int value) {
   Serial.print(msg);
   Serial.println(value);
 }
-void showWaveInfo(WaveInfo meta) {
-  int x = indent;
+void showWaveInfo(WaveInfo meta, char *filename) {
   int y = yRow4;
   int h = height;
 
   eraseErrorOutline();
-  showMessage(x, y + h * 0, "Volume ", gVolume);
-  showMessage(x, y + h * 1, "Number samples ", meta.numSamples);
-  showMessage(x, y + h * 2, "Bytes / sample ", meta.bytesPerSample);
-  showMessage(x, y + h * 3, "Overall file size ", meta.filesize);
-  showMessage(x, y + h * 4, "Samples / sec ", meta.samplesPerSec);
-  showMessage(x, y + h * 5, "Hold time ", meta.holdtime);
+  showMessage(indent, y + h * 1, filename);
+  showMessage(indent, y + h * 2, "Number samples ", meta.numSamples);
+  showMessage(indent, y + h * 3, "Bytes / sample ", meta.bytesPerSample);
+  showMessage(indent, y + h * 4, "Overall file size ", meta.filesize);
+  showMessage(indent, y + h * 5, "Samples / sec ", meta.samplesPerSec);
+  showMessage(indent, y + h * 6, "Hold time ", meta.holdtime);
 
+  tft.setCursor(indent, y + h * 7);
   float playbackTime = (1.0 / meta.samplesPerSec * meta.numSamples);
   tft.setTextColor(cTEXTCOLOR, cBACKGROUND);
-  tft.setCursor(indent, y + h * 6);
   tft.print("Playback time ");
   tft.setTextColor(cVALUE, cBACKGROUND);
   tft.print(playbackTime, 3);
@@ -265,7 +288,7 @@ void sayGrid(const char *name) {
     WaveInfo info;
     bool rc = audio_qspi.getInfo(&info, myfile);
     if (rc) {
-      showWaveInfo(info);
+      showWaveInfo(info, myfile);
     } else {
       showError("Unable to read WAV file", "See console log", myfile);
     }
@@ -288,7 +311,7 @@ void loop() {
 
   Serial.print("Loop ");
   Serial.println(gLoopCount);
-  showLoopCount(yRow3, gLoopCount);
+  showMessage(indent, yRow4, "Starting playback ", gLoopCount);
 
   // ----- play audio clip at 16 khz/float
   sayGrid("aaaa");
@@ -309,8 +332,8 @@ void loop() {
   delay(SHORT_PAUSE);
 
   // debug error message display
-  //char myfile[] = "bogus.wav";
-  //showError("Unable to read WAV file", "See console log", myfile);
+  // char myfile[] = "bogus.wav";
+  // showError("Unable to read WAV file", "See console log", myfile);
 
   delay(LONG_PAUSE);   // extra pause between loops
   gLoopCount++;
